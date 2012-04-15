@@ -84,7 +84,7 @@ public class CToolsInstaller {
 		CDA = new JCheckBox("Update CDA", null, true);
 		CDE = new JCheckBox("Update CDE", null, true);
 		CGG = new JCheckBox("Update CGG", null, true);
-		saikuStable = new JCheckBox("Update Saiku to 2.2", null, true);
+		saikuStable = new JCheckBox("Update Saiku to 2.3", null, true);
 		saikuStable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (saikuStable.isSelected()) {
