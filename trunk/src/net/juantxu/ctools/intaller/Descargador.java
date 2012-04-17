@@ -1,9 +1,12 @@
 package net.juantxu.ctools.intaller;
 
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -13,7 +16,7 @@ import java.util.Properties;
 public class Descargador {
 
 	public boolean update(String pentahoSolutionsDir, String tomcatDir,
-			Boolean CDF, Boolean CDA, Boolean CDE, Boolean CGG,
+			Boolean CDF, Boolean CDA, Boolean CDE, Boolean SAMPLES, Boolean CGG,
 			Boolean saikuDev, Boolean saikuStable) {
 		boolean exito = false;
 		Properties prop = new CargaProperties().Carga();
@@ -25,6 +28,12 @@ public class Descargador {
 		if (CDE)
 			exito = descargaWin(prop.getProperty("CDE"), pentahoSolutionsDir,
 					tomcatDir);
+		if (SAMPLES)
+			exito = descargaSamples(prop.getProperty("CDA_SAMPLES"),
+									prop.getProperty("CDE_SAMPLES"),
+									prop.getProperty("CDF_SAMPLES"),
+									pentahoSolutionsDir,
+									tomcatDir);
 		if (CGG)
 			exito = descargaWin(prop.getProperty("CGG"), pentahoSolutionsDir,
 					tomcatDir);
@@ -38,6 +47,45 @@ public class Descargador {
 		return exito;
 	}
 
+	private boolean descargaSamples(String cda_samples, 
+									String cde_samples,
+									String cdf_samples, 
+									String pentahoSolutionsDir, 
+									String tomcatDir) {
+		boolean exito = false;
+		//Creating plugin-samples directory 
+		System.out.println("Deleting plugin-samples folder under pertaho-solutions");		
+		File f = new File( pentahoSolutionsDir + "/plugin-samples/");
+		new DeleteDir().deleteDirectory(f);
+		f.mkdir();
+		//Creating index.xml
+		 try{
+			  // Create file 
+			  FileWriter fstream = new FileWriter(pentahoSolutionsDir + "/plugin-samples/index.xml");
+			  BufferedWriter out = new BufferedWriter(fstream);
+			  out.write("<index><visible>true</visible><name>Plugin Samples</name><description>Plugin Samples</description></index>");
+			  //Close the output stream
+			  out.close();
+			  exito=true;
+			  }catch (Exception e){//Catch exception if any
+			  System.err.println("Error: " + e.getMessage());
+			  exito=false;
+			  }
+		
+		//downloading samples
+		exito = descargaWin(cda_samples, pentahoSolutionsDir,
+						tomcatDir);
+		exito = descargaWin(cde_samples, pentahoSolutionsDir,
+				tomcatDir);
+		
+		exito = descargaWin(cdf_samples, pentahoSolutionsDir,
+				tomcatDir);
+		return exito;
+	}
+
+	
+	
+	
 	private boolean descargaWin(String APP, String pentahoSolutionsDir,
 			String tomcatDir) {
 		boolean exito = false;
@@ -92,7 +140,7 @@ public class Descargador {
 
 	private boolean ubica(String app, String pentahoSolutionsDir, String tomcatDir) {
 		boolean exito = true;
-		if (app.toLowerCase().contains("cda")) {
+		if ( (app.toLowerCase().contains("cda")) && !(app.toLowerCase().contains("sample") ) ) {
 			File cda = new File(pentahoSolutionsDir + "/tmp/" + app + "/cda");
 			if (cda.exists()) {
 				File cdaBK = new File(pentahoSolutionsDir + "/tmp/cdaBackUp"
@@ -115,7 +163,7 @@ public class Descargador {
 				exito = false;
 			}
 
-		} else if (app.toLowerCase().contains("pentaho-cdf-dd")) {
+		} else if ((app.toLowerCase().contains("pentaho-cdf-dd"))&& !(app.toLowerCase().contains("solution") ) ) {
 			File cda = new File(pentahoSolutionsDir + "/tmp/" + app
 					+ "/pentaho-cdf-dd");
 			if (cda.exists()) {
@@ -168,7 +216,7 @@ public class Descargador {
 				System.out.println("cgg directory is not available");
 				exito = false;
 			}
-		} else if (app.toLowerCase().contains("pentaho-cdf")) {
+		} else if ((app.toLowerCase().contains("pentaho-cdf")) && !(app.toLowerCase().contains("sample") ) && !(app.toLowerCase().contains("solution") )  ) {
 			File cda = new File(pentahoSolutionsDir + "/tmp/" + app
 					+ "/pentaho-cdf");
 			if (cda.exists()) {
@@ -194,6 +242,60 @@ public class Descargador {
 				System.out.println("pentaho-cdf directory is not available");
 				exito = false;
 			}
+			
+		// samples 	
+		} else if (app.toLowerCase().contains("cda-samples")) {
+			File cdasamples = new File(pentahoSolutionsDir + "/tmp/" + app
+					+ "/cda");
+			if (cdasamples.exists()) {
+				if (cdasamples.renameTo(new File(pentahoSolutionsDir
+						+ "/plugin-samples/cda"))) {
+					System.out.println("==================>cda-samplese Updated");
+					exito = true;
+				} else {
+					System.out
+							.println("+++++++UNABLE TO UPDATE cda-samplese+++++");
+					exito = false;
+				}
+			} else {
+				System.out.println("cda-samplese directory is not available");
+				exito = false;
+			}
+		} else if (app.toLowerCase().contains("pentaho-cdf-dd-solution")) {
+			File cdfddsamples = new File(pentahoSolutionsDir + "/tmp/" + app
+					+ "/pentaho-cdf-dd");
+			if (cdfddsamples.exists()) {
+				if (cdfddsamples.renameTo(new File(pentahoSolutionsDir
+						+ "/plugin-samples/pentaho-cdf-dd"))) {
+					System.out.println("==================>cdf-dd-samples Updated");
+					exito = true;
+				} else {
+					System.out
+							.println("+++++++UNABLE TO UPDATE cdf-dd-samplese+++++");
+					exito = false;
+				}
+			} else {
+				System.out.println("cdfdd-samplese directory is not available");
+				exito = false;
+			}
+		} else if (app.toLowerCase().contains("pentaho-cdf-samples")) {
+			File cdfsamples = new File(pentahoSolutionsDir + "/tmp/" + app
+					+ "/pentaho-cdf");
+			if (cdfsamples.exists()) {
+				if (cdfsamples.renameTo(new File(pentahoSolutionsDir
+						+ "/plugin-samples/pentaho-cdf"))) {
+					System.out.println("==================>cdf-samples Updated");
+					exito = true;
+				} else {
+					System.out
+							.println("+++++++UNABLE TO UPDATE cdf-samplese+++++");
+					exito = false;
+				}
+			} else {
+				System.out.println("cda-samplese directory is not available");
+				exito = false;
+			}
+			
 
 		} else if (app.toLowerCase().contains("saiku")) {
 			File cda = new File(pentahoSolutionsDir + "/tmp/" + app + "/saiku");
