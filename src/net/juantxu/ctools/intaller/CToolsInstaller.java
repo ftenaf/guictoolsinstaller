@@ -23,7 +23,7 @@ public class CToolsInstaller {
 	private JLabel lblPthSol, lblTomcat, lblUpdate;
 	private JTextArea txtExplicacion;
 	private JButton btnPthSol, btnTomcat, btnUpdate;
-	private JCheckBox CDF, CDA, CDE, CGG, saikuStable, saikuDev;
+	private JCheckBox CDF, CDA, CDE, SAMPLES, CGG, saikuStable, saikuDev;
 	private JFrame frame;
 	private JPanel botones;
 
@@ -83,6 +83,7 @@ public class CToolsInstaller {
 		CDF = new JCheckBox("Update CDF", null, true);
 		CDA = new JCheckBox("Update CDA", null, true);
 		CDE = new JCheckBox("Update CDE", null, true);
+		SAMPLES = new JCheckBox("Update also CTools samples", null, true);
 		CGG = new JCheckBox("Update CGG", null, true);
 		saikuStable = new JCheckBox("Update Saiku to 2.3", null, true);
 		saikuStable.addActionListener(new ActionListener() {
@@ -130,6 +131,7 @@ public class CToolsInstaller {
 									tomcatDir, 
 									CDF.isSelected(),
 									CDA.isSelected(),
+									SAMPLES.isSelected(),
 									CDE.isSelected(),
 									CGG.isSelected(),
 									saikuDev.isSelected(),
@@ -156,6 +158,7 @@ public class CToolsInstaller {
 								CDF.isSelected(),
 								CDA.isSelected(),
 								CDE.isSelected(),
+								SAMPLES.isSelected(),
 								CGG.isSelected(),
 								saikuDev.isSelected(),
 								saikuStable.isSelected())
@@ -200,6 +203,8 @@ public class CToolsInstaller {
 		botones.add(CDA);
 		botones.add(new JLabel());
 		botones.add(CDE);
+		botones.add(new JLabel());
+		botones.add(SAMPLES);
 		botones.add(new JLabel());
 		botones.add(CGG);
 		botones.add(new JLabel());

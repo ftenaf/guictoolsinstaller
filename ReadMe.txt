@@ -10,3 +10,8 @@ GuiCtoolsInstaller.bat if you are in windows
 or double click on the auto executable GuiCToolsInstaller.jar 
 
 If you have any question you can contact me jortilles@gmail.com
+
+
+To-Do:
+
+I know I'm missing stable - developement fo CTOOLS. 
